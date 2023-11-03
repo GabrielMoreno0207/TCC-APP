@@ -1,12 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:tcc_app/Screens/cards/api1.dart';
 import 'package:tcc_app/Screens/cards/api2.dart';
 import 'package:tcc_app/Screens/cards/api3.dart';
 import 'package:tcc_app/Screens/cards/api4.dart';
-import 'package:tcc_app/Screens/cards/api5.dart';
 import 'package:tcc_app/Screens/flutter.dart';
 import 'package:tcc_app/Screens/config.dart';
 
@@ -23,7 +21,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     const HomePageContent(),
     const FlutterPage(),
-    const ConfigPage(),
+    ConfigPage(),
   ];
 
   @override
@@ -33,12 +31,7 @@ class _HomePageState extends State<HomePage> {
       body: Stack(
         children: [
           Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/background_image.jpg"),
-                fit: BoxFit.cover,
-              ),
-            ),
+            decoration: const BoxDecoration(),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
               child: Container(
@@ -84,108 +77,75 @@ class HomePageContent extends StatelessWidget {
         ),
         Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: buildGradientCard(
-                    context,
-                    'Qualidade do ar',
-                    LinearGradient(
-                      colors: [Colors.green[300]!, Colors.green[900]!],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Api1CardWidget(),
-                        ),
-                      );
-                    },
+            buildGradientCard(
+              context,
+              'Qualidade do Ar',
+              LinearGradient(
+                colors: [Colors.green[300]!, Colors.green[900]!],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Api1CardWidget(),
                   ),
-                ),
-                Expanded(
-                  child: buildGradientCard(
-                    context,
-                    'Calcule a pegada de Carbono',
-                    LinearGradient(
-                      colors: [Colors.blue[300]!, Colors.blue[900]!],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Api2CardWidget(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+                );
+              },
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: buildGradientCard(
-                    context,
-                    'Pergunte ao GPT',
-                    LinearGradient(
-                      colors: [Colors.purple[300]!, Colors.purple[900]!],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ChatGPTScreen(),
-                        ),
-                      );
-                    },
+            buildGradientCard(
+              context,
+              'Calcule a pegada de Carbono',
+              LinearGradient(
+                colors: [Colors.blue[300]!, Colors.blue[900]!],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CarbonFootprintCalculator(),
                   ),
-                ),
-                Expanded(
-                  child: buildGradientCard(
-                    context,
-                    'Dados sobre Reciclagem',
-                    LinearGradient(
-                      colors: [Colors.orange[300]!, Colors.orange[900]!],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Api4CardWidget(),
-                        ),
-                      );
-                    },
+                );
+              },
+            ),
+            buildGradientCard(
+              context,
+              'Pergunte ao GPT',
+              LinearGradient(
+                colors: [Colors.purple[300]!, Colors.purple[900]!],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ChatGPTScreen(),
                   ),
-                ),
-              ],
+                );
+              },
+            ),
+            buildGradientCard(
+              context,
+              'Dados sobre Reciclagem',
+              LinearGradient(
+                colors: [Colors.orange[300]!, Colors.orange[900]!],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Api4CardWidget(),
+                  ),
+                );
+              },
             ),
           ],
-        ),
-        buildGradientCard(
-          context,
-          'Jogo da Memória',
-          LinearGradient(
-            colors: [Colors.red[300]!, Colors.red[900]!],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const MemoryGameScreen(),
-              ),
-            );
-          },
         ),
       ],
     );

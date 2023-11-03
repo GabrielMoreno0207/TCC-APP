@@ -5,5 +5,5 @@ class AppTheme {
 
   static Color get primaryColor => const Color(0xFF1C232E);
 
-  static Color get secondaryColor => const Color(0xFF0BB07B);
+  static Color get secondaryColor => Color.fromARGB(255, 163, 56, 206);
 }

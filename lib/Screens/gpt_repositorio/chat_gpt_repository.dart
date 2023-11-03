@@ -1,16 +1,12 @@
 import 'package:dio/dio.dart';
-
 import 'package:tcc_app/Screens/gpt_repositorio/app_config.dart';
 
 class ChatGPTRepository {
   final Dio _dio;
-
   ChatGPTRepository(Dio dio) : _dio = dio;
-
   Future<String> promptMessage(String prompt) async {
     try {
       const url = "https://api.openai.com/v1/completions";
-
       final response = await _dio.post(url,
           data: {
             'model': 'text-davinci-003',
@@ -24,7 +20,6 @@ class ChatGPTRepository {
           options: Options(headers: {
             'Authorization': 'Bearer ${AppConfig.getOpenAIAPIKey}',
           }));
-
       return response.data['choices'][0]['text'];
     } catch (_) {
       return 'Ocorreu um erro! Por favor, tente novamente';

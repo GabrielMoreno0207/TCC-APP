@@ -2,5 +2,5 @@ class AppConfig {
   AppConfig._();
 
   static String get getOpenAIAPIKey =>
-      "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"; // Your API Key here
+      "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";
 }

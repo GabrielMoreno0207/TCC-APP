@@ -2,6 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+void main() {
+  runApp(
+    MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.green[300]!, // Cor do primeiro gradiente
+          title: const Text('Título da AppBar'),
+        ),
+        body: Api1CardWidget(),
+      ),
+    ),
+  );
+}
+
 class Api1CardWidget extends StatefulWidget {
   const Api1CardWidget({Key? key}) : super(key: key);
 
@@ -17,22 +31,20 @@ class _Api1CardWidgetState extends State<Api1CardWidget> {
   Future<void> fetchData(String cityName) async {
     final apiUrl = Uri.parse(
         'https://api.waqi.info/feed/${cityName}/?token=d3352d90cfe7bf98056581cc77367590656bf605');
-
     try {
       final response = await http.get(apiUrl);
-
       if (response.statusCode == 200) {
         setState(() {
           _data = json.decode(response.body);
-          _errorMessage = null; // Limpa a mensagem de erro
+          _errorMessage = null;
         });
       } else {
         throw Exception('Falha ao carregar dados: ${response.statusCode}');
       }
     } catch (e) {
       setState(() {
-        _data = null; // Limpa os dados
-        _errorMessage = 'Erro: $e'; // Define a mensagem de erro
+        _data = null;
+        _errorMessage = 'Erro: $e';
       });
     }
   }
@@ -108,21 +120,7 @@ class _Api1CardWidgetState extends State<Api1CardWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              const Text(
-                'Qualidade do Ar',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
               const SizedBox(height: 16.0),
-              const Text(
-                'Digite o nome da cidade:',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
               TextField(
                 controller: _cityController,
                 style: const TextStyle(color: Colors.white),
@@ -166,7 +164,7 @@ class _Api1CardWidgetState extends State<Api1CardWidget> {
                     ),
                     const SizedBox(height: 16.0),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         buildInfoCard(
                           'AQI',
@@ -178,6 +176,11 @@ class _Api1CardWidgetState extends State<Api1CardWidget> {
                           '${_data!["data"]["dominentpol"] ?? 'N/A'}',
                           const Color.fromARGB(255, 151, 150, 150),
                         ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
                         buildInfoCard(
                           'Data e Hora da Medição',
                           '${_data!["data"]["time"]["s"] ?? 'N/A'} (${_data!["data"]["time"]["tz"] ?? 'N/A'})',
@@ -195,7 +198,7 @@ class _Api1CardWidgetState extends State<Api1CardWidget> {
                     ),
                     const SizedBox(height: 16.0),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         buildInfoCard(
                           'CO',

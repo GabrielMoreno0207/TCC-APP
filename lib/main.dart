@@ -20,8 +20,8 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const HomePage(),
-        '/home': (context) => const FlutterPage(),
+        '/': (context) => LoginForm(),
+        '/home': (context) => const HomePage(),
       },
     );
   }

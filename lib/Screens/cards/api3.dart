@@ -64,7 +64,6 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
                       children: [
                         if (_messages[index].messageFrom == MessageFrom.me)
                           const Spacer(),
-                        // Messagem
                         Container(
                           margin: const EdgeInsets.all(12),
                           width: MediaQuery.of(context).size.width * 0.7,

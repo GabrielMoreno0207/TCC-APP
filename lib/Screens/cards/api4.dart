@@ -1,16 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 
-class _ChartData {
-  _ChartData(this.x, this.y, this.color);
+class Api4CardWidget extends StatefulWidget {
+  const Api4CardWidget({Key? key}) : super(key: key);
 
-  final String x;
-  final double y;
-  final Color color;
+  @override
+  _Api4CardWidgetState createState() => _Api4CardWidgetState();
 }
 
-class Api4CardWidget extends StatelessWidget {
-  const Api4CardWidget({Key? key});
+class _Api4CardWidgetState extends State<Api4CardWidget> {
+  double somaPapelPapelao = 0.0;
+  double somaPlastico = 0.0;
+  double somaMetais = 0.0;
+  double somaVidros = 0.0;
+  double somaOutros = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarEAnalisarJson();
+  }
+
+  Future<void> _carregarEAnalisarJson() async {
+    try {
+      final jsonString = await rootBundle.loadString('assets/data.json');
+      final jsonData = json.decode(jsonString);
+
+      for (var item in jsonData) {
+        somaPapelPapelao += (item['Papel/Papelão'] ?? 0.0) / 1000;
+        somaPlastico += (item['Plastico'] ?? 0.0) / 1000;
+        somaMetais += (item['Metais'] ?? 0.0) / 1000;
+        somaVidros += (item['Vidros'] ?? 0.0) / 1000;
+        somaOutros += (item['Outros'] ?? 0.0) / 1000;
+      }
+
+      setState(() {});
+    } catch (error) {
+      print('Erro ao carregar e analisar o JSON: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +48,14 @@ class Api4CardWidget extends StatelessWidget {
       color: const Color(0xFF1C232E),
       elevation: 2.0,
       child: Container(
-        padding: const EdgeInsets.all(16.0),
+        height: 500,
+        padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 1.0),
         child: Column(
           children: [
+            SizedBox(height: 20), // Adicione um espaço vazio
             const Center(
               child: Text(
-                ' ',
+                'Coleta de Residuos - Porcentagem Média por Cidade',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18.0,
@@ -31,66 +63,24 @@ class Api4CardWidget extends StatelessWidget {
                 ),
               ),
             ),
-            _buildChartCard(
-              'Coleta de Resíduos - Porcentagem média das cidades',
-              400,
-              <_ChartData>[
-                _ChartData('Papel/papelão', 12, Colors.red),
-                _ChartData('Plástico', 15, Colors.blue),
-                _ChartData('Vidro', 30, Colors.green),
-                _ChartData('Metal', 6.4, Colors.orange),
-                _ChartData('Outros', 14, Colors.purple),
-              ],
-            ),
-            _buildDonutChartCard(
-              'Gráfico de Rosca',
-              260,
-              <_ChartData>[
-                _ChartData('papel', 20, Colors.red),
-                _ChartData('plastico', 30, Colors.green),
-                _ChartData('metal', 25, Colors.blue),
-                _ChartData('vidro', 10, Colors.orange),
-                _ChartData('outros', 10, Colors.pink),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildChartCard(String title, double height, List<_ChartData> data) {
-    return Card(
-      elevation: 2.0,
-      color:
-          const Color(0xFF2C3947), // Defina a cor de fundo personalizada aqui
-      child: Container(
-        height: height,
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Center(
-              child: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
             Expanded(
               child: SfCartesianChart(
                 primaryXAxis: CategoryAxis(),
                 primaryYAxis:
-                    NumericAxis(minimum: 0, maximum: 40, interval: 10),
+                    NumericAxis(minimum: 0, maximum: 50, interval: 10),
                 tooltipBehavior: TooltipBehavior(enable: true),
                 series: <ChartSeries<_ChartData, String>>[
                   ColumnSeries<_ChartData, String>(
-                    dataSource: data,
-                    xValueMapper: (_ChartData data, _) => data.x,
-                    yValueMapper: (_ChartData data, _) => data.y,
-                    name: 'Gold',
+                    dataSource: [
+                      _ChartData('Papel', somaPapelPapelao, Colors.red),
+                      _ChartData('Plástico', somaPlastico, Colors.blue),
+                      _ChartData('Vidro', somaVidros, Colors.green),
+                      _ChartData('Metal', somaMetais, Colors.orange),
+                      _ChartData('Outros', somaOutros, Colors.purple),
+                    ],
+                    xValueMapper: (_ChartData data, _) => data.category,
+                    yValueMapper: (_ChartData data, _) => data.value,
+                    name: 'Porcentagem',
                     pointColorMapper: (_ChartData data, _) => data.color,
                   ),
                 ],
@@ -101,45 +91,12 @@ class Api4CardWidget extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildDonutChartCard(
-      String title, double height, List<_ChartData> data) {
-    return Card(
-      elevation: 2.0,
-      color:
-          const Color(0xFF2C3947), // Defina a cor de fundo personalizada aqui
-      child: Container(
-        height: height,
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Center(
-              child: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            Expanded(
-              child: SfCircularChart(
-                tooltipBehavior: TooltipBehavior(enable: true),
-                series: <CircularSeries<_ChartData, String>>[
-                  DoughnutSeries<_ChartData, String>(
-                    dataSource: data,
-                    xValueMapper: (_ChartData data, _) => data.x,
-                    yValueMapper: (_ChartData data, _) => data.y,
-                    innerRadius: '40%',
-                    dataLabelSettings: const DataLabelSettings(isVisible: true),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+class _ChartData {
+  _ChartData(this.category, this.value, this.color);
+
+  final String category;
+  final double value;
+  final Color color;
 }
