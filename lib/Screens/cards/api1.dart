@@ -30,7 +30,7 @@ class _Api1CardWidgetState extends State<Api1CardWidget> {
 
   Future<void> fetchData(String cityName) async {
     final apiUrl = Uri.parse(
-        'https://api.waqi.info/feed/${cityName}/?token=d3352d90cfe7bf98056581cc77367590656bf605');
+        'https://api.waqi.info/feed/$cityName/?token=d3352d90cfe7bf98056581cc77367590656bf605');
     try {
       final response = await http.get(apiUrl);
       if (response.statusCode == 200) {
